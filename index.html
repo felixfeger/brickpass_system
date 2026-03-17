@@ -2,384 +2,837 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyBrickPass — City Metro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#111111">
+<title>BrickPass Card Setup — City Metro</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; background: #fff; color: #111; min-height: 100vh; }
-header { background: #fff; border-bottom: 1.5px solid #111; padding: 0 24px; height: 60px; display: flex; align-items: center; gap: 14px; position: sticky; top: 0; z-index: 50; }
-.logo-img { width: 36px; height: 36px; object-fit: contain; }
-.logo-divider { width: 1px; height: 24px; background: #ccc; }
-.logo-text { font-size: 15px; font-weight: 700; letter-spacing: -0.3px; }
-.logo-sub { font-size: 10px; color: #777; letter-spacing: 1.2px; text-transform: uppercase; margin-top: 1px; }
-.header-spacer { flex: 1; }
-.header-card-num { font-family: "Courier New", monospace; font-size: 11px; letter-spacing: 2px; color: #555; background: #f4f4f4; padding: 5px 12px; border-radius: 20px; display: none; }
-.container { max-width: 460px; margin: 0 auto; padding: 32px 20px 60px; }
-.section-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #888; margin-bottom: 10px; }
-.page-title { font-size: 30px; font-weight: 700; letter-spacing: -0.8px; line-height: 1.1; margin-bottom: 6px; }
-.page-sub { font-size: 14px; color: #666; margin-bottom: 32px; line-height: 1.5; }
-.field-label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #888; margin-bottom: 8px; }
-.input-row { display: flex; gap: 8px; margin-bottom: 10px; }
-input[type="text"], input[type="number"] { flex: 1; height: 46px; padding: 0 14px; border: 1.5px solid #ddd; border-radius: 4px; font-size: 15px; font-family: inherit; color: #111; background: #fff; outline: none; transition: border-color 0.15s; }
-input[type="text"]::placeholder, input[type="number"]::placeholder { color: #bbb; }
-input[type="text"]:focus, input[type="number"]:focus { border-color: #111; }
-.card-num-input { font-family: "Courier New", monospace !important; letter-spacing: 2px; text-transform: uppercase; }
-.divider { display: flex; align-items: center; gap: 12px; margin: 18px 0; font-size: 11px; color: #bbb; letter-spacing: 1px; text-transform: uppercase; }
-.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #eee; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 46px; padding: 0 20px; border-radius: 4px; font-family: inherit; font-size: 14px; font-weight: 700; letter-spacing: 0.3px; cursor: pointer; transition: all 0.15s; border: 1.5px solid transparent; white-space: nowrap; }
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background: #fff;
+  color: #111;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ── */
+header {
+  background: #fff;
+  border-bottom: 1.5px solid #111;
+  padding: 0 20px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.logo-img { width: 32px; height: 32px; object-fit: contain; flex-shrink: 0; }
+.logo-divider { width: 1px; height: 22px; background: #ddd; flex-shrink: 0; }
+.header-text { flex: 1; min-width: 0; }
+.header-title { font-size: 14px; font-weight: 700; letter-spacing: -0.3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.header-sub { font-size: 9px; color: #888; letter-spacing: 1.2px; text-transform: uppercase; margin-top: 1px; }
+
+.header-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 34px;
+  padding: 0 14px;
+  border: 1.5px solid #111;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #111;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.header-link:hover { background: #111; color: #fff; }
+
+/* ── Main content ── */
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Screens ── */
+.screen { display: none; flex-direction: column; flex: 1; }
+.screen.active { display: flex; }
+
+/* ── Screen 1: Platform detect / intro ── */
+#screenIntro {
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px 32px;
+  text-align: center;
+}
+
+.eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #aaa;
+  margin-bottom: 12px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+
+.page-sub {
+  font-size: 14px;
+  color: #777;
+  line-height: 1.6;
+  margin-bottom: 36px;
+  max-width: 300px;
+}
+
+/* NFC animation rings */
+.nfc-rings {
+  width: 160px;
+  height: 160px;
+  position: relative;
+  margin: 0 auto 36px;
+}
+
+.nfc-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid #e0e0e0;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  transition: border-color 0.3s;
+}
+.nfc-ring-a { width: 160px; height: 160px; }
+.nfc-ring-b { width: 112px; height: 112px; }
+.nfc-ring-c { width: 64px;  height: 64px; }
+
+.nfc-rings.scanning .nfc-ring { border-color: #111; }
+.nfc-rings.scanning .nfc-ring-a { animation: nfc-pulse 1.6s ease-out infinite; }
+.nfc-rings.scanning .nfc-ring-b { animation: nfc-pulse 1.6s ease-out infinite 0.22s; }
+.nfc-rings.scanning .nfc-ring-c { animation: nfc-pulse 1.6s ease-out infinite 0.44s; }
+.nfc-rings.success .nfc-ring { border-color: #111; }
+
+@keyframes nfc-pulse {
+  0%   { transform: translate(-50%,-50%) scale(0.95); opacity: 1; }
+  65%  { transform: translate(-50%,-50%) scale(1.07); opacity: 0.25; }
+  100% { transform: translate(-50%,-50%) scale(0.95); opacity: 1; }
+}
+
+.nfc-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px; height: 48px;
+  background: #111;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 52px;
+  padding: 0 28px;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1.5px solid transparent;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
 .btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.btn-black { background: #111; color: #fff; border-color: #111; }
+.btn-black { background: #111; color: #fff; border-color: #111; width: 100%; max-width: 320px; }
 .btn-black:not(:disabled):hover { background: #333; border-color: #333; }
-.btn-outline { background: #fff; color: #111; border-color: #ccc; }
+.btn-outline { background: #fff; color: #111; border-color: #ccc; width: 100%; max-width: 320px; }
 .btn-outline:not(:disabled):hover { border-color: #111; }
-.btn-full { width: 100%; }
-.btn-lg { height: 52px; font-size: 15px; }
-.bp-card { background: #111; border-radius: 14px; padding: 24px 26px 22px; color: #fff; position: relative; overflow: hidden; aspect-ratio: 1.586; margin-bottom: 16px; user-select: none; }
-.bp-card-accent { position: absolute; right: -30px; top: -30px; width: 180px; height: 180px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.07); }
-.bp-card-accent2 { position: absolute; left: 20px; bottom: -40px; width: 140px; height: 140px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.05); }
-.bp-card-logo { position: absolute; top: 22px; right: 24px; width: 34px; height: 34px; object-fit: contain; filter: invert(1); opacity: 0.85; }
-.bp-card-top { margin-bottom: auto; }
-.bp-agency { font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,0.4); }
-.bp-brand { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.1; margin-top: 2px; }
-.bp-card-body { position: absolute; bottom: 24px; left: 26px; right: 26px; }
-.bp-bal-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 2px; }
-.bp-balance { font-size: 32px; font-weight: 700; letter-spacing: -1px; color: #fff; margin-bottom: 6px; }
-.bp-pass-pill { display: inline-flex; align-items: center; gap: 5px; background: #fff; color: #111; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
-.bp-card-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 10px; }
-.bp-card-num { font-family: "Courier New", monospace; font-size: 11px; letter-spacing: 2px; color: rgba(255,255,255,0.5); }
-.bp-card-name { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-top: 3px; }
-.actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
-.action-tile { background: #fff; border: 1.5px solid #e8e8e8; border-radius: 8px; padding: 16px 10px 14px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: all 0.15s; font-family: inherit; }
-.action-tile:hover { border-color: #111; transform: translateY(-2px); }
-.action-icon { width: 40px; height: 40px; background: #f4f4f4; border-radius: 8px; display: grid; place-items: center; font-size: 18px; }
-.action-name { font-size: 12px; font-weight: 700; color: #111; text-align: center; }
-.action-price { font-size: 11px; color: #888; }
-.section-card { background: #fff; border: 1.5px solid #e8e8e8; border-radius: 8px; padding: 20px; margin-bottom: 12px; }
-.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-.section-title { font-size: 14px; font-weight: 700; letter-spacing: -0.2px; }
-.txn-item { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid #f0f0f0; }
-.txn-item:last-child { border-bottom: none; padding-bottom: 0; }
-.txn-item:first-child { padding-top: 0; }
-.txn-icon { width: 36px; height: 36px; border-radius: 8px; background: #f4f4f4; display: grid; place-items: center; font-size: 15px; flex-shrink: 0; }
-.txn-info { flex: 1; min-width: 0; }
-.txn-desc { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.txn-date { font-size: 11px; color: #aaa; margin-top: 2px; }
-.txn-amount { font-size: 14px; font-weight: 700; flex-shrink: 0; }
-.txn-amount.neg { color: #c00; }
-.txn-amount.pos { color: #007a2f; }
-.txn-amount.zero { color: #aaa; font-size: 11px; font-weight: 500; }
-.alert { padding: 11px 14px; border-radius: 4px; font-size: 13px; font-weight: 600; margin-bottom: 12px; border-left: 3px solid; }
-.alert-success { background: #f0faf4; color: #1a6632; border-color: #1a6632; }
-.alert-error { background: #fdf0f0; color: #b00; border-color: #c00; }
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); display: flex; align-items: flex-end; justify-content: center; z-index: 100; padding: 0 16px 24px; }
-.modal-overlay.hidden { display: none; }
-.modal { background: #fff; border-radius: 12px 12px 8px 8px; padding: 28px 24px 24px; width: 100%; max-width: 460px; animation: slideUp 0.25s cubic-bezier(0.32,1.2,0.6,1); }
-@keyframes slideUp { from{transform:translateY(50px);opacity:0} to{transform:translateY(0);opacity:1} }
-.modal-handle { width: 32px; height: 4px; background: #ddd; border-radius: 2px; margin: -10px auto 20px; }
-.modal-title { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 4px; }
-.modal-sub { font-size: 13px; color: #777; margin-bottom: 20px; }
-.amount-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
-.amount-chip { border: 1.5px solid #e0e0e0; background: #fff; border-radius: 6px; padding: 13px 8px; font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.12s; text-align: center; }
-.amount-chip:hover { border-color: #111; }
-.amount-chip.selected { border-color: #111; background: #111; color: #fff; }
-.pass-card { border-radius: 8px; padding: 18px; margin-bottom: 16px; border: 1.5px solid #e0e0e0; }
-.pass-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-.pass-price { font-size: 30px; font-weight: 700; letter-spacing: -1px; line-height: 1; }
-.pass-detail { font-size: 13px; color: #777; margin-top: 6px; line-height: 1.4; }
-.modal-footer { display: flex; gap: 8px; }
-.modal-footer .btn { flex: 1; }
-.spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.35); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
-@keyframes spin { to{transform:rotate(360deg)} }
+
+.btn-row { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; }
+
+.scan-status {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #bbb;
+  margin-top: 16px;
+  min-height: 18px;
+  transition: color 0.2s;
+}
+.scan-status.scanning { color: #111; }
+.scan-status.error { color: #c00; }
+.scan-status.success { color: #007a2f; }
+
+/* iOS info box */
+.ios-box {
+  background: #f7f7f7;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 18px 20px;
+  margin: 0 24px 24px;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.6;
+  display: none;
+}
+.ios-box.visible { display: block; }
+.ios-box strong { color: #111; font-weight: 700; }
+.ios-step { display: flex; gap: 10px; margin-bottom: 8px; }
+.ios-step:last-child { margin-bottom: 0; }
+.ios-step-num { width: 20px; height: 20px; background: #111; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+/* ── Screen 2: Card found / loaded ── */
+#screenCard {
+  padding: 24px 20px 32px;
+}
+
+/* Virtual BrickPass card */
+.bp-card {
+  background: #111;
+  border-radius: 14px;
+  padding: 22px 24px 20px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1.586;
+  margin-bottom: 20px;
+  user-select: none;
+  flex-shrink: 0;
+}
+.bp-ring1 { position: absolute; right: -24px; top: -24px; width: 150px; height: 150px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.07); }
+.bp-ring2 { position: absolute; left: 10px; bottom: -36px; width: 120px; height: 120px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.05); }
+.bp-card-logo-img { position: absolute; top: 20px; right: 20px; width: 28px; height: 28px; object-fit: contain; filter: invert(1); opacity: 0.8; }
+.bp-agency { font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+.bp-brand  { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; margin-top: 2px; }
+.bp-body   { position: absolute; bottom: 20px; left: 24px; right: 24px; }
+.bp-bal-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 2px; }
+.bp-balance   { font-size: 30px; font-weight: 700; letter-spacing: -1px; color: #fff; margin-bottom: 5px; }
+.bp-pass-pill { display: inline-flex; align-items: center; gap: 4px; background: #fff; color: #111; font-size: 9px; font-weight: 700; padding: 2px 9px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+.bp-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 8px; }
+.bp-card-num  { font-family: "Courier New", monospace; font-size: 11px; letter-spacing: 2px; color: rgba(255,255,255,0.45); }
+.bp-card-name { font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-top: 2px; }
 .hidden { display: none !important; }
-.page-footer { margin-top: 32px; padding-top: 20px; border-top: 1px solid #eee; font-size: 11px; color: #aaa; display: flex; align-items: center; gap: 10px; }
-.page-footer img { width: 20px; height: 20px; object-fit: contain; opacity: 0.3; }
-.switch-btn { background: none; border: none; font-family: inherit; font-size: 13px; color: #aaa; cursor: pointer; text-decoration: underline; padding: 4px; }
+
+/* Section */
+.section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #aaa;
+  margin-bottom: 12px;
+}
+
+/* Amount grid */
+.amount-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.amount-chip {
+  border: 1.5px solid #e0e0e0;
+  background: #fff;
+  border-radius: 6px;
+  padding: 14px 8px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.12s;
+  text-align: center;
+}
+.amount-chip:hover  { border-color: #111; }
+.amount-chip.active { border-color: #111; background: #111; color: #fff; }
+
+.custom-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.custom-label { font-size: 12px; color: #888; white-space: nowrap; }
+input[type="number"] {
+  flex: 1;
+  height: 44px;
+  padding: 0 14px;
+  border: 1.5px solid #ddd;
+  border-radius: 4px;
+  font-size: 15px;
+  font-family: inherit;
+  color: #111;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s;
+}
+input[type="number"]:focus { border-color: #111; }
+
+/* Pass options */
+.pass-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.pass-tile {
+  border: 1.5px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px 12px;
+  cursor: pointer;
+  transition: all 0.12s;
+  font-family: inherit;
+  text-align: left;
+  background: #fff;
+}
+.pass-tile:hover  { border-color: #111; }
+.pass-tile.active { border-color: #111; background: #111; color: #fff; }
+.pass-tile-name   { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+.pass-tile-price  { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+.pass-tile-detail { font-size: 11px; color: #aaa; margin-top: 3px; }
+.pass-tile.active .pass-tile-detail { color: rgba(255,255,255,0.5); }
+
+/* Tabs */
+.tab-row {
+  display: flex;
+  gap: 0;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.tab-btn {
+  flex: 1;
+  height: 40px;
+  border: none;
+  background: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #aaa;
+  transition: all 0.15s;
+  border-right: 1.5px solid #e0e0e0;
+}
+.tab-btn:last-child { border-right: none; }
+.tab-btn.active { background: #111; color: #fff; }
+
+/* Alert */
+.alert {
+  padding: 11px 14px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  border-left: 3px solid;
+}
+.alert-success { background: #f0faf4; color: #1a6632; border-color: #1a6632; }
+.alert-error   { background: #fdf0f0; color: #b00; border-color: #c00; }
+
+/* Spinner */
+.spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.35); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Divider */
+.divider { display: flex; align-items: center; gap: 12px; margin: 6px 0 16px; font-size: 10px; color: #ccc; letter-spacing: 1px; text-transform: uppercase; }
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #eee; }
+
+.switch-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  color: #aaa;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 8px;
+  margin-top: 4px;
+}
 .switch-btn:hover { color: #111; }
+
+/* ── Footer ── */
+footer {
+  border-top: 1px solid #eee;
+  padding: 18px 24px;
+  font-size: 11px;
+  color: #aaa;
+  line-height: 1.6;
+  text-align: center;
+}
+footer strong { color: #888; font-weight: 600; }
 </style>
 </head>
 <body>
+
 <header>
   <img class="logo-img" id="headerLogo" src="" alt="City Metro">
   <div class="logo-divider"></div>
-  <div><div class="logo-text">MyBrickPass</div><div class="logo-sub">City Metro</div></div>
-  <div class="header-spacer"></div>
-  <div class="header-card-num" id="headerBadge"></div>
-</header>
-<div class="container">
-  <div id="lookupScreen">
-    <div class="lookup-wrap" style="padding-top:12px;">
-      <div class="section-eyebrow">City Metro · BrickPass</div>
-      <div class="page-title">Manage Your<br>BrickPass Card</div>
-      <div class="page-sub">Check your balance, reload funds, and purchase passes.</div>
-      <div id="alertLookup"></div>
-      <label class="field-label">Your Card Number</label>
-      <div class="input-row">
-        <input class="card-num-input" type="text" id="cardInput" placeholder="BP1234567890" maxlength="12">
-        <button class="btn btn-black" onclick="loadCard()">Load Card</button>
-      </div>
-      <div class="divider">or</div>
-      <button class="btn btn-black btn-full btn-lg" onclick="createNewCard()">Register a New BrickPass Card</button>
-    </div>
-    <div class="page-footer">
-      <img id="footerLogo" src="" alt="">
-      <span>© 2026 City Metro · Republic States Railway and Transportation Authority</span>
-    </div>
+  <div class="header-text">
+    <div class="header-title">City Metro BrickPass Card</div>
+    <div class="header-sub">Card Setup &amp; Reload</div>
   </div>
-  <div id="dashboard" class="hidden">
-    <div id="alertDash"></div>
-    <div class="bp-card">
-      <div class="bp-card-accent"></div>
-      <div class="bp-card-accent2"></div>
-      <img class="bp-card-logo" id="cardLogo" src="" alt="City Metro">
-      <div class="bp-card-top">
-        <div class="bp-agency">City Metro</div>
-        <div class="bp-brand">BrickPass</div>
+  <a class="header-link" href="https://citymetro.xyz" target="_blank">
+    citymetro.xyz ↗
+  </a>
+</header>
+
+<main>
+
+  <!-- ═══ SCREEN 1: INTRO / SCAN ═══════════════════════════════════════════ -->
+  <div class="screen active" id="screenIntro">
+
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:36px 24px 24px;text-align:center;">
+      <div class="eyebrow">City Metro · BrickPass</div>
+      <div class="page-title">Set Up Your<br>BrickPass Card</div>
+      <div class="page-sub" id="introSub">Hold your BrickPass card to the back of your phone to load it.</div>
+
+      <div class="nfc-rings" id="nfcRings">
+        <div class="nfc-ring nfc-ring-a"></div>
+        <div class="nfc-ring nfc-ring-b"></div>
+        <div class="nfc-ring nfc-ring-c"></div>
+        <div class="nfc-center">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C12 2 20 6 20 12C20 18 12 22 12 22" stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+            <path d="M12 7C12 7 16 9 16 12C16 15 12 17 12 17" stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+            <circle cx="12" cy="12" r="1.5" fill="white"/>
+          </svg>
+        </div>
       </div>
-      <div class="bp-card-body">
+
+      <div class="btn-row" id="scanBtnRow">
+        <button class="btn btn-black" id="scanBtn" onclick="startScan()">Tap Card to Phone</button>
+        <button class="btn btn-outline" onclick="showManualEntry()">Enter Card Number Manually</button>
+      </div>
+
+      <div class="scan-status" id="scanStatus"></div>
+    </div>
+
+    <!-- iOS instructions (shown on iPhone) -->
+    <div class="ios-box" id="iosBox">
+      <strong>iPhone detected</strong> — iOS doesn't support Web NFC in Safari. Use one of these methods instead:
+      <br><br>
+      <div class="ios-step"><div class="ios-step-num">1</div><div>Download <strong>NFC Tools</strong> from the App Store (free)</div></div>
+      <div class="ios-step"><div class="ios-step-num">2</div><div>Open NFC Tools → <strong>Write</strong> → <strong>Add a record</strong> → <strong>Text</strong></div></div>
+      <div class="ios-step"><div class="ios-step-num">3</div><div>Type your BrickPass card number (e.g. <strong>BP1234567890</strong>)</div></div>
+      <div class="ios-step"><div class="ios-step-num">4</div><div>Tap <strong>Write</strong> then hold card to top of iPhone</div></div>
+      <br>
+      Then use the button below to enter your card number and manage it here.
+    </div>
+
+  </div>
+
+  <!-- ═══ SCREEN 2: CARD LOADED ════════════════════════════════════════════ -->
+  <div class="screen" id="screenCard">
+
+    <div id="cardAlert"></div>
+
+    <!-- Virtual Card -->
+    <div class="bp-card">
+      <div class="bp-ring1"></div>
+      <div class="bp-ring2"></div>
+      <img class="bp-card-logo-img" id="cardLogo" src="" alt="">
+      <div class="bp-agency">City Metro</div>
+      <div class="bp-brand">BrickPass</div>
+      <div class="bp-body">
         <div class="bp-bal-label">Stored Value</div>
         <div class="bp-balance" id="cardBalance">$0.00</div>
-        <div id="cardPassPill" class="bp-pass-pill hidden">✓ <span id="passLabel">Day Pass Active</span></div>
-        <div class="bp-card-footer">
+        <div id="cardPassPill" class="bp-pass-pill hidden">✓ <span id="passLabel">Pass Active</span></div>
+        <div class="bp-footer">
           <div>
-            <div class="bp-card-num" id="displayCardNumber">BP0000000000</div>
-            <div class="bp-card-name" id="displayCardName">BrickPass Rider</div>
+            <div class="bp-card-num" id="cardNum">BP0000000000</div>
+            <div class="bp-card-name" id="cardName">BrickPass Rider</div>
           </div>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" opacity="0.3">
-            <path d="M12 2C12 2 22 7 22 12C22 17 12 22 12 22" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-            <path d="M12 7C12 7 18 9.5 18 12C18 14.5 12 17 12 17" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" opacity="0.3">
+            <path d="M12 2C12 2 20 6 20 12C20 18 12 22 12 22" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <path d="M12 7C12 7 16 9 16 12C16 15 12 17 12 17" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round"/>
           </svg>
         </div>
       </div>
     </div>
-    <div class="actions-grid">
-      <button class="action-tile" onclick="openModal('reload')"><div class="action-icon">💳</div><div class="action-name">Add Value</div><div class="action-price">From $5</div></button>
-      <button class="action-tile" onclick="openModal('day')"><div class="action-icon">☀</div><div class="action-name">Day Pass</div><div class="action-price">$5.00</div></button>
-      <button class="action-tile" onclick="openModal('month')"><div class="action-icon">📅</div><div class="action-name">Monthly Pass</div><div class="action-price">$50.00</div></button>
+
+    <!-- Tabs -->
+    <div class="tab-row">
+      <button class="tab-btn active" id="tabValue" onclick="switchTab('value')">Add Value</button>
+      <button class="tab-btn" id="tabDay"   onclick="switchTab('day')">Day Pass</button>
+      <button class="tab-btn" id="tabMonth" onclick="switchTab('month')">Monthly Pass</button>
     </div>
-    <div class="section-card">
-      <div class="section-header">
-        <div class="section-title">Recent Activity</div>
-        <button class="btn btn-outline" style="height:32px;padding:0 12px;font-size:11px;" onclick="loadHistory()">Refresh</button>
+
+    <!-- ─ Add Value Tab ─ -->
+    <div id="tabContentValue">
+      <div class="section-label">Select Amount</div>
+      <div class="amount-grid">
+        <button class="amount-chip" onclick="pickAmount(this,10)">$10</button>
+        <button class="amount-chip" onclick="pickAmount(this,20)">$20</button>
+        <button class="amount-chip" onclick="pickAmount(this,50)">$50</button>
+        <button class="amount-chip" onclick="pickAmount(this,100)">$100</button>
+        <button class="amount-chip" onclick="pickAmount(this,200)">$200</button>
+        <button class="amount-chip" onclick="pickAmount(this,0)">Custom</button>
       </div>
-      <div id="historyList"><p style="text-align:center;color:#bbb;padding:24px 0;font-size:13px;">Loading…</p></div>
+      <div class="custom-row">
+        <span class="custom-label">Custom $</span>
+        <input type="number" id="customAmount" placeholder="5 – 500" min="5" max="500" step="1">
+      </div>
+      <button class="btn btn-black" style="width:100%;" id="reloadBtn" onclick="submitReload()">Add Funds</button>
     </div>
-    <div style="margin-top:8px;text-align:center;">
-      <button class="switch-btn" onclick="switchCard()">← Use a different card</button>
-    </div>
-    <div class="page-footer">
-      <img id="footerLogo2" src="" alt="">
-      <span>© 2026 City Metro · Republic States Railway and Transportation Authority</span>
-    </div>
-  </div>
-</div>
 
-<!-- RELOAD MODAL -->
-<div id="reloadModal" class="modal-overlay hidden">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">Add Stored Value</div>
-    <div class="modal-sub">Each ride costs $1.25. Add credits to your BrickPass.</div>
-    <div class="amount-grid">
-      <button class="amount-chip" onclick="pickAmount(this,10)">$10</button>
-      <button class="amount-chip" onclick="pickAmount(this,20)">$20</button>
-      <button class="amount-chip" onclick="pickAmount(this,50)">$50</button>
-      <button class="amount-chip" onclick="pickAmount(this,100)">$100</button>
-      <button class="amount-chip" onclick="pickAmount(this,200)">$200</button>
-      <button class="amount-chip" onclick="pickAmount(this,0)">Custom</button>
+    <!-- ─ Day Pass Tab ─ -->
+    <div id="tabContentDay" class="hidden">
+      <div class="section-label">Day Pass</div>
+      <div style="border:1.5px solid #e0e0e0;border-radius:8px;padding:18px;margin-bottom:16px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:4px;">Unlimited Rides — Today Only</div>
+        <div style="font-size:28px;font-weight:700;letter-spacing:-1px;">$5.00</div>
+        <div style="font-size:12px;color:#888;margin-top:6px;line-height:1.5;">Valid until midnight. Tap freely all day with no per-ride deductions.</div>
+      </div>
+      <button class="btn btn-black" style="width:100%;" id="dayBtn" onclick="submitPass('day')">Purchase Day Pass — $5.00</button>
     </div>
-    <label class="field-label" style="margin-bottom:8px;">Custom Amount</label>
-    <input type="number" id="customAmount" placeholder="$5.00 – $500.00" min="5" max="500" step="0.01" style="width:100%;margin-bottom:16px;">
-    <div id="reloadAlert"></div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModals()">Cancel</button>
-      <button class="btn btn-black" id="reloadBtn" onclick="submitReload()">Add Funds</button>
-    </div>
-  </div>
-</div>
 
-<!-- DAY PASS MODAL -->
-<div id="dayModal" class="modal-overlay hidden">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">Day Pass</div>
-    <div class="pass-card">
-      <div class="pass-title">Unlimited Rides — Today Only</div>
-      <div class="pass-price">$5.00</div>
-      <div class="pass-detail">Valid until midnight. Tap as many times as you like with no per-ride deductions.</div>
+    <!-- ─ Monthly Pass Tab ─ -->
+    <div id="tabContentMonth" class="hidden">
+      <div class="section-label">Monthly Pass</div>
+      <div style="border:1.5px solid #e0e0e0;border-radius:8px;padding:18px;margin-bottom:16px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:4px;">Unlimited Rides — 30 Days</div>
+        <div style="font-size:28px;font-weight:700;letter-spacing:-1px;">$50.00</div>
+        <div style="font-size:12px;color:#888;margin-top:6px;line-height:1.5;">Activates immediately. Ride without limits for 30 days.</div>
+      </div>
+      <button class="btn btn-black" style="width:100%;" id="monthBtn" onclick="submitPass('month')">Purchase Monthly Pass — $50.00</button>
     </div>
-    <div id="dayAlert"></div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModals()">Cancel</button>
-      <button class="btn btn-black" id="dayBtn" onclick="submitPass('day')">Purchase Day Pass — $5.00</button>
-    </div>
-  </div>
-</div>
 
-<!-- MONTH PASS MODAL -->
-<div id="monthModal" class="modal-overlay hidden">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">Monthly Pass</div>
-    <div class="pass-card">
-      <div class="pass-title">Unlimited Rides — 30 Days</div>
-      <div class="pass-price">$50.00</div>
-      <div class="pass-detail">Activates immediately. Ride without limits for 30 days. Pass takes priority over stored value.</div>
-    </div>
-    <div id="monthAlert"></div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModals()">Cancel</button>
-      <button class="btn btn-black" id="monthBtn" onclick="submitPass('month')">Purchase Monthly Pass — $50.00</button>
-    </div>
+    <button class="switch-btn" onclick="showScanScreen()">← Scan a different card</button>
+
   </div>
-</div>
+
+</main>
+
+<footer>
+  Copyright 2026 by the Republic State Railway and Transportation Authority. All rights reserved.<br>
+  <strong>An official website of the Republic States Government.</strong>
+</footer>
 
 <script>
 const API = 'https://brickpass-api.felixfeger46.workers.dev';
 const LOGO_SRC = 'data:image/jpeg;base64,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';
-document.querySelectorAll('#headerLogo,#cardLogo,#footerLogo,#footerLogo2').forEach(i=>i.src=LOGO_SRC);
 
-let card=null, selectedAmount=0;
+document.getElementById('headerLogo').src = LOGO_SRC;
+document.getElementById('cardLogo').src   = LOGO_SRC;
 
-async function loadCard(){
-  const id=document.getElementById('cardInput').value.trim().toUpperCase();
-  if(!/^BP\d{6,}$/.test(id)){showAlert('alertLookup','error','Enter a valid BrickPass number (e.g. BP1234567890)');return;}
-  try{
-    const res=await fetch(API+'/api/cards/'+id);
-    if(!res.ok)throw new Error();
-    activateDashboard(await res.json());
-    localStorage.setItem('bp_card',id);
-  }catch{showAlert('alertLookup','error','Card not found. Double-check the number and try again.');}
-}
+let currentCard   = null;
+let selectedAmount = 0;
+let activeTab      = 'value';
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+const hasWebNFC = 'NDEFReader' in window;
 
-async function createNewCard(){
-  try{
-    const res=await fetch(API+'/api/cards',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({})});
-    if(!res.ok)throw new Error();
-    const data=await res.json();
-    activateDashboard(data);
-    localStorage.setItem('bp_card',data.card_id);
-    showAlert('alertDash','success','Your new BrickPass is ready: '+data.card_id);
-  }catch{showAlert('alertLookup','error','Could not create card — check API connection.');}
-}
-
-function activateDashboard(data){
-  card=data;
-  document.getElementById('lookupScreen').classList.add('hidden');
-  document.getElementById('dashboard').classList.remove('hidden');
-  const b=document.getElementById('headerBadge');
-  b.textContent=data.card_id; b.style.display='block';
-  renderCard(); loadHistory();
-}
-
-function renderCard(){
-  document.getElementById('cardBalance').textContent='$'+parseFloat(card.balance).toFixed(2);
-  document.getElementById('displayCardNumber').textContent=card.card_id;
-  document.getElementById('displayCardName').textContent=(card.cardholder_name||'BrickPass Rider').toUpperCase();
-  const pill=document.getElementById('cardPassPill');
-  const label=document.getElementById('passLabel');
-  if(card.pass_type&&card.pass_expiry&&new Date(card.pass_expiry)>new Date()){
-    const exp=new Date(card.pass_expiry);
-    label.textContent=card.pass_type==='day'
-      ?'Day Pass — until '+exp.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})
-      :'Monthly Pass — until '+exp.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    pill.classList.remove('hidden');
-  }else{pill.classList.add('hidden');}
-}
-
-async function loadHistory(){
-  const el=document.getElementById('historyList');
-  if(!card)return;
-  try{
-    const res=await fetch(API+'/api/cards/'+card.card_id+'/history');
-    const txns=await res.json();
-    if(!txns.length){el.innerHTML='<p style="text-align:center;color:#bbb;padding:24px 0;font-size:13px;">No transactions yet.</p>';return;}
-    const icons={TAP:'🚌',RELOAD:'💳',PASS_PURCHASE:'🎫',CARD_ISSUED:'🆕',REFUND:'↩'};
-    el.innerHTML=txns.map(t=>{
-      const cls=t.amount<0?'neg':t.amount>0?'pos':'zero';
-      const amt=t.amount===0?'Pass Ride':t.amount>0?'+$'+t.amount.toFixed(2):'-$'+Math.abs(t.amount).toFixed(2);
-      const d=new Date(t.created_at);
-      const ds=d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' · '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-      return '<div class="txn-item"><div class="txn-icon">'+(icons[t.type]||'•')+'</div><div class="txn-info"><div class="txn-desc">'+t.description+'</div><div class="txn-date">'+ds+'</div></div><div class="txn-amount '+cls+'">'+amt+'</div></div>';
-    }).join('');
-  }catch{el.innerHTML='<p style="text-align:center;color:#c00;padding:24px 0;font-size:13px;">Could not load activity.</p>';}
-}
-
-function switchCard(){
-  card=null; localStorage.removeItem('bp_card');
-  document.getElementById('headerBadge').style.display='none';
-  document.getElementById('dashboard').classList.add('hidden');
-  document.getElementById('lookupScreen').classList.remove('hidden');
-  document.getElementById('cardInput').value='';
-  document.getElementById('alertLookup').innerHTML='';
-}
-
-function openModal(type){closeModals();document.getElementById(type+'Modal').classList.remove('hidden');}
-function closeModals(){
-  ['reload','day','month'].forEach(t=>document.getElementById(t+'Modal').classList.add('hidden'));
-  document.querySelectorAll('.amount-chip').forEach(c=>c.classList.remove('selected'));
-  document.getElementById('customAmount').value=''; selectedAmount=0;
-  ['reloadAlert','dayAlert','monthAlert'].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML='';});
-}
-
-function pickAmount(el,val){
-  document.querySelectorAll('.amount-chip').forEach(c=>c.classList.remove('selected'));
-  el.classList.add('selected'); selectedAmount=val;
-  if(val===0){document.getElementById('customAmount').focus();selectedAmount=0;}
-  else{document.getElementById('customAmount').value='';}
-}
-
-async function submitReload(){
-  let amount=selectedAmount;
-  const custom=parseFloat(document.getElementById('customAmount').value);
-  if(!amount&&custom>0)amount=custom;
-  if(!amount||amount<5||amount>500){showAlert('reloadAlert','error','Choose or enter an amount between $5.00 and $500.00');return;}
-  const btn=document.getElementById('reloadBtn');
-  setLoading(btn,true,'Add Funds');
-  try{
-    const res=await fetch(API+'/api/cards/'+card.card_id+'/reload',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amount})});
-    const data=await res.json();
-    if(!res.ok)throw new Error(data.error);
-    card.balance=data.balance; renderCard(); closeModals();
-    showAlert('alertDash','success','$'+amount.toFixed(2)+' added to your BrickPass!');
-    loadHistory();
-  }catch(e){showAlert('reloadAlert','error',e.message||'Reload failed.');}
-  finally{setLoading(btn,false,'Add Funds');}
-}
-
-async function submitPass(type){
-  const labels={day:'Purchase Day Pass — $5.00',month:'Purchase Monthly Pass — $50.00'};
-  const btn=document.getElementById(type+'Btn');
-  setLoading(btn,true,labels[type]);
-  try{
-    const res=await fetch(API+'/api/cards/'+card.card_id+'/pass',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pass_type:type})});
-    const data=await res.json();
-    if(!res.ok)throw new Error(data.error);
-    card.pass_type=data.pass_type; card.pass_expiry=data.pass_expiry;
-    renderCard(); closeModals();
-    showAlert('alertDash','success',(type==='day'?'Day Pass':'Monthly Pass')+' is now active!');
-    loadHistory();
-  }catch(e){showAlert(type+'Alert','error',e.message||'Purchase failed.');}
-  finally{setLoading(btn,false,labels[type]);}
-}
-
-function showAlert(id,type,msg){
-  const el=document.getElementById(id);
-  el.innerHTML='<div class="alert alert-'+type+'">'+msg+'</div>';
-  if(type==='success')setTimeout(()=>{el.innerHTML='';},4500);
-}
-
-function setLoading(btn,loading,label){
-  btn.disabled=loading;
-  btn.innerHTML=loading?'<span class="spinner"></span> Processing…':label;
-}
-
-window.addEventListener('load',()=>{
-  const saved=localStorage.getItem('bp_card');
-  if(saved){document.getElementById('cardInput').value=saved;loadCard();}
+// ── Init ──────────────────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  if (isIOS) {
+    document.getElementById('iosBox').classList.add('visible');
+    document.getElementById('scanBtn').style.display = 'none';
+    document.getElementById('introSub').textContent = 'iPhone detected. Use NFC Tools app to write your card, then enter your card number below.';
+  } else if (!hasWebNFC) {
+    document.getElementById('scanBtn').textContent = 'NFC Not Supported';
+    document.getElementById('scanBtn').disabled = true;
+    document.getElementById('introSub').textContent = 'Your browser does not support Web NFC. Use Chrome on Android, or enter your card number manually.';
+  }
 });
 
-document.querySelectorAll('.modal-overlay').forEach(el=>{el.addEventListener('click',e=>{if(e.target===el)closeModals();});});
-document.getElementById('cardInput').addEventListener('keypress',e=>{if(e.key==='Enter')loadCard();});
+// ── NFC Scan ─────────────────────────────────────────────────────────────
+async function startScan() {
+  if (!hasWebNFC) return;
+
+  const rings  = document.getElementById('nfcRings');
+  const status = document.getElementById('scanStatus');
+  const btn    = document.getElementById('scanBtn');
+
+  rings.classList.add('scanning');
+  status.className = 'scan-status scanning';
+  status.textContent = 'Scanning — Hold card to back of phone';
+  btn.disabled = true;
+  btn.textContent = 'Scanning…';
+
+  try {
+    const ndef = new NDEFReader();
+    await ndef.scan();
+
+    ndef.addEventListener('reading', ({ message }) => {
+      let cardId = '';
+
+      for (const record of message.records) {
+        if (record.recordType === 'text') {
+          const decoder = new TextDecoder(record.encoding || 'utf-8');
+          const text = decoder.decode(record.data).trim().toUpperCase();
+          if (text.startsWith('BP')) { cardId = text; break; }
+        }
+        if (record.recordType === 'url') {
+          const decoder = new TextDecoder();
+          const url = decoder.decode(record.data);
+          const match = url.match(/card=(BP\w+)/i);
+          if (match) { cardId = match[1].toUpperCase(); break; }
+        }
+      }
+
+      if (!cardId) {
+        // No BrickPass ID found — offer to register this card
+        const uid = message.serialNumber || '';
+        status.className = 'scan-status error';
+        status.textContent = 'No BrickPass ID found on this card';
+        rings.classList.remove('scanning');
+        rings.classList.add('success');
+        btn.disabled = false;
+        btn.textContent = 'Tap Card to Phone';
+        return;
+      }
+
+      rings.classList.remove('scanning');
+      rings.classList.add('success');
+      status.className = 'scan-status success';
+      status.textContent = 'Card read — ' + cardId;
+      btn.disabled = false;
+      btn.textContent = 'Tap Card to Phone';
+
+      loadCardData(cardId);
+    });
+
+    ndef.addEventListener('readingerror', () => {
+      status.className = 'scan-status error';
+      status.textContent = 'Could not read card — try again';
+      rings.classList.remove('scanning');
+      btn.disabled = false;
+      btn.textContent = 'Tap Card to Phone';
+    });
+
+  } catch (err) {
+    console.error(err);
+    status.className = 'scan-status error';
+    status.textContent = err.name === 'NotAllowedError'
+      ? 'NFC permission denied — allow in browser settings'
+      : 'NFC error — try again';
+    rings.classList.remove('scanning');
+    btn.disabled = false;
+    btn.textContent = 'Tap Card to Phone';
+  }
+}
+
+// ── Manual Entry ──────────────────────────────────────────────────────────
+function showManualEntry() {
+  const id = prompt('Enter your BrickPass card number (e.g. BP1234567890):');
+  if (!id) return;
+  const clean = id.trim().toUpperCase();
+  if (!/^BP\d{6,}$/.test(clean)) {
+    alert('Invalid card number. It should start with BP followed by digits.');
+    return;
+  }
+  loadCardData(clean);
+}
+
+// ── Load Card from API ────────────────────────────────────────────────────
+async function loadCardData(cardId) {
+  const status = document.getElementById('scanStatus');
+  status.className = 'scan-status scanning';
+  status.textContent = 'Loading card data…';
+
+  try {
+    const res = await fetch(API + '/api/cards/' + cardId);
+    if (!res.ok) {
+      // Card not registered yet — offer to create
+      const create = confirm('Card ' + cardId + ' is not registered. Register it as a new BrickPass card?');
+      if (create) {
+        await registerCard(cardId);
+      } else {
+        status.className = 'scan-status';
+        status.textContent = '';
+      }
+      return;
+    }
+    const data = await res.json();
+    showCardScreen(data);
+  } catch {
+    status.className = 'scan-status error';
+    status.textContent = 'Network error — check connection';
+  }
+}
+
+async function registerCard(cardId) {
+  try {
+    const res = await fetch(API + '/api/cards', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ card_id: cardId })
+    });
+    if (!res.ok) {
+      // If custom ID not supported, create and show result
+      const res2 = await fetch(API + '/api/cards', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+      });
+      const data = await res2.json();
+      showCardScreen(data);
+      showAlert('success', 'New BrickPass created: ' + data.card_id + '. Write this ID to your card using NFC Tools.');
+      return;
+    }
+    const data = await res.json();
+    showCardScreen(data);
+    showAlert('success', 'Card registered successfully!');
+  } catch {
+    document.getElementById('scanStatus').className = 'scan-status error';
+    document.getElementById('scanStatus').textContent = 'Registration failed — try again';
+  }
+}
+
+// ── Show Card Screen ──────────────────────────────────────────────────────
+function showCardScreen(data) {
+  currentCard = data;
+  document.getElementById('screenIntro').classList.remove('active');
+  document.getElementById('screenCard').classList.add('active');
+  renderCard();
+  switchTab('value');
+}
+
+function renderCard() {
+  if (!currentCard) return;
+  document.getElementById('cardBalance').textContent = '$' + parseFloat(currentCard.balance).toFixed(2);
+  document.getElementById('cardNum').textContent = currentCard.card_id;
+  document.getElementById('cardName').textContent = (currentCard.cardholder_name || 'BrickPass Rider').toUpperCase();
+
+  const pill  = document.getElementById('cardPassPill');
+  const label = document.getElementById('passLabel');
+  if (currentCard.pass_type && currentCard.pass_expiry && new Date(currentCard.pass_expiry) > new Date()) {
+    const exp = new Date(currentCard.pass_expiry);
+    label.textContent = currentCard.pass_type === 'day'
+      ? 'Day Pass — until ' + exp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      : 'Monthly Pass — until ' + exp.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    pill.classList.remove('hidden');
+  } else {
+    pill.classList.add('hidden');
+  }
+}
+
+function showScanScreen() {
+  currentCard = null;
+  document.getElementById('screenCard').classList.remove('active');
+  document.getElementById('screenIntro').classList.add('active');
+  document.getElementById('scanStatus').textContent = '';
+  document.getElementById('scanStatus').className = 'scan-status';
+  document.getElementById('nfcRings').className = 'nfc-rings';
+  document.getElementById('cardAlert').innerHTML = '';
+}
+
+// ── Tabs ──────────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  activeTab = tab;
+  ['value','day','month'].forEach(t => {
+    document.getElementById('tabContent' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('hidden', t !== tab);
+    document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.toggle('active', t === tab);
+  });
+}
+
+// ── Amount Selection ──────────────────────────────────────────────────────
+function pickAmount(el, val) {
+  document.querySelectorAll('.amount-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  selectedAmount = val;
+  if (val === 0) { document.getElementById('customAmount').focus(); selectedAmount = 0; }
+  else { document.getElementById('customAmount').value = ''; }
+}
+
+// ── Reload ────────────────────────────────────────────────────────────────
+async function submitReload() {
+  let amount = selectedAmount;
+  const custom = parseFloat(document.getElementById('customAmount').value);
+  if (!amount && custom > 0) amount = custom;
+  if (!amount || amount < 5 || amount > 500) {
+    showAlert('error', 'Choose or enter an amount between $5.00 and $500.00');
+    return;
+  }
+  const btn = document.getElementById('reloadBtn');
+  setLoading(btn, true, 'Add Funds');
+  try {
+    const res = await fetch(API + '/api/cards/' + currentCard.card_id + '/reload', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    currentCard.balance = data.balance;
+    renderCard();
+    showAlert('success', '$' + amount.toFixed(2) + ' added to your BrickPass!');
+    document.querySelectorAll('.amount-chip').forEach(c => c.classList.remove('active'));
+    document.getElementById('customAmount').value = '';
+    selectedAmount = 0;
+  } catch (e) {
+    showAlert('error', e.message || 'Reload failed — try again');
+  } finally {
+    setLoading(btn, false, 'Add Funds');
+  }
+}
+
+// ── Pass ──────────────────────────────────────────────────────────────────
+async function submitPass(type) {
+  const labels = { day: 'Purchase Day Pass — $5.00', month: 'Purchase Monthly Pass — $50.00' };
+  const btnId  = type === 'day' ? 'dayBtn' : 'monthBtn';
+  const btn    = document.getElementById(btnId);
+  setLoading(btn, true, labels[type]);
+  try {
+    const res = await fetch(API + '/api/cards/' + currentCard.card_id + '/pass', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pass_type: type })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    currentCard.pass_type   = data.pass_type;
+    currentCard.pass_expiry = data.pass_expiry;
+    renderCard();
+    showAlert('success', (type === 'day' ? 'Day Pass' : 'Monthly Pass') + ' is now active!');
+  } catch (e) {
+    showAlert('error', e.message || 'Purchase failed — try again');
+  } finally {
+    setLoading(btn, false, labels[type]);
+  }
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+function showAlert(type, msg) {
+  const el = document.getElementById('cardAlert');
+  el.innerHTML = '<div class="alert alert-' + type + '">' + msg + '</div>';
+  if (type === 'success') setTimeout(() => { el.innerHTML = ''; }, 4500);
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function setLoading(btn, loading, label) {
+  btn.disabled = loading;
+  btn.innerHTML = loading ? '<span class="spinner"></span> Processing…' : label;
+}
 </script>
 </body>
 </html>
